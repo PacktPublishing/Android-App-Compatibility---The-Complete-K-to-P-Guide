@@ -8,9 +8,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name=".FuelFinderApp">
+
         <activity
-            android:name=".SignInActivity"
+            android:name=".activities.SignInActivity"
             android:theme="@style/AppTheme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,12 +21,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/title_activity_main" />
-        <activity android:name=".FillUpDetailActivity" />
-        <activity android:name=".FillUpEditActivity" />
-        <activity android:name=".StationDetailActivity" />
-        <activity android:name=".StationEditActivity"></activity>
+        <activity android:name=".activities.FillUpDetailActivity" />
+        <activity android:name=".activities.FillUpEditActivity" />
+        <activity android:name=".activities.StationDetailActivity" />
+        <activity android:name=".activities.StationEditActivity"></activity>
     </application>
 
 </manifest>

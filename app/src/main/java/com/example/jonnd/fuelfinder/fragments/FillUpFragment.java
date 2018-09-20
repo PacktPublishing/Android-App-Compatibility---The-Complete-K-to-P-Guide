@@ -1,4 +1,4 @@
-package com.example.jonnd.fuelfinder;
+package com.example.jonnd.fuelfinder.fragments;
 
 
 import android.os.Bundle;
@@ -7,14 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.jonnd.fuelfinder.R;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class StationFragment extends Fragment {
+public class FillUpFragment extends Fragment {
 
 
-    public StationFragment() {
+    public FillUpFragment() {
         // Required empty public constructor
     }
 
