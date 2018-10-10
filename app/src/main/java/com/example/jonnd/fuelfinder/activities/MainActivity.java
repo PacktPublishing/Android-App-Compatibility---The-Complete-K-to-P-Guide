@@ -1,45 +1,60 @@
 package com.example.jonnd.fuelfinder.activities;
 
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
-import android.widget.TextView;
+import android.view.View;
 
-import com.example.jonnd.fuelfinder.R;
+import com.example.jonnd.fuelfinder.adapters.CustomPagerAdapter;
+import com.example.jonnd.fuelfinder.databinding.ActivityMainBinding;
+import com.example.jonnd.fuelfinder.viewmodel.MainViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView mTextMessage;
-
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    mTextMessage.setText(R.string.fill_up);
-                    return true;
-                case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.stations);
-                    return true;
-                case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.settings);
-                    return true;
-            }
-            return false;
-        }
-    };
+    MainViewModel mViewModel;
+    ActivityMainBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        mTextMessage = (TextView) findViewById(R.id.message);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        mBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        setContentView(mBinding.getRoot());
+        // Pass the viewmodel, pagerAdapter, FAB clicklistener, and pageChangeListener
+        // to the binding class so they can be bound to the views.
+        mBinding.setViewModel(mViewModel);
+        mBinding.setPagerAdapter(new CustomPagerAdapter(getSupportFragmentManager()));
+        mBinding.setFabClickListener(fabClickListener);
+        mBinding.setPageChangeListener(pageChangeListener);
     }
+
+    /**
+     * FAB click listener that is responsible for opening either {@link FillUpEditActivity}
+     * or {@link StationEditActivity}, depending on the current item in the ViewPager.
+     */
+    View.OnClickListener fabClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (mViewModel.currentItem.get() == 0) {
+                startActivity(new Intent(MainActivity.this, FillUpEditActivity.class));
+            }
+            else {
+                startActivity(new Intent(MainActivity.this, StationEditActivity.class));
+            }
+        }
+    };
+
+    /**
+     * ViewPager Page change listener that's responsible for keeping the viewpager
+     * in-sync with the BottomNavigationView when the fragment's are changed from
+     * drag events.
+     */
+    ViewPager.SimpleOnPageChangeListener pageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
+        @Override
+        public void onPageSelected(int position) {
+            mBinding.navigation.getMenu().getItem(position).setChecked(true);
+        }
+    };
 }

@@ -1,6 +1,7 @@
 package com.example.jonnd.fuelfinder.database;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
@@ -8,6 +9,7 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
+import android.databinding.ObservableBoolean;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -31,7 +33,6 @@ public abstract class FillUpDatabase extends RoomDatabase {
     private static FillUpDatabase INSTANCE;
     private static String DN_NAME = "FillUpDatabase";
 
-
     public static FillUpDatabase getDatabase(final Context ctx) {
         if (INSTANCE == null) {
             INSTANCE = Room.databaseBuilder(ctx, FillUpDatabase.class, DN_NAME)
@@ -40,30 +41,31 @@ public abstract class FillUpDatabase extends RoomDatabase {
                         public void onCreate(@NonNull SupportSQLiteDatabase db) {
                             Executors.newSingleThreadExecutor()
                                     .execute(new Runnable() {
-                                @Override
-                                public void run() {
-                                    sleepFor(2500);
-                                    final User user = new User();
-                                    user.setFirstName("John");
-                                    user.setLastName("Doe");
-                                    user.setUserName("johnDoe");
-                                    user.setPassword("pa55word");
-                                    DataGenerator generator = new DataGenerator();
-                                    final List<Station> stations = generator.generateStations();
-                                    final FillUpDatabase database = getDatabase(ctx);
-                                    insertData(user, stations, database);
-                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
                                         @Override
                                         public void run() {
-                                            Toast.makeText(ctx, "Data has been added to " + DN_NAME + " db", Toast.LENGTH_SHORT).show();
+                                            sleepFor(2500);
+                                            final User user = new User();
+                                            user.setFirstName("John");
+                                            user.setLastName("Doe");
+                                            user.setUserName("johnDoe");
+                                            user.setPassword("pa55word");
+                                            DataGenerator generator = new DataGenerator();
+                                            List<Station> stations = generator.generateStations();
+                                            List<FillUp> fillUps = generator.generateFillUps();
+                                            FillUpDatabase database = getDatabase(ctx);
+                                            insertData(user, stations, fillUps, database);
+                                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Toast.makeText(ctx, "Data has been added to " + DN_NAME + " db", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
                                         }
                                     });
-                                }
-                            });
                         }
                     })
                     .allowMainThreadQueries()
-                    .build();
+                    .build();;
         }
         return INSTANCE;
     }
@@ -76,12 +78,21 @@ public abstract class FillUpDatabase extends RoomDatabase {
         }
     }
 
-    private static void insertData(final User user, final List<Station> stations, final FillUpDatabase database) {
+    private static void insertData(final User user, final List<Station> stations, final List<FillUp> fillUps,
+                                   final FillUpDatabase database) {
         database.runInTransaction(new Runnable() {
             @Override
             public void run() {
                 database.userDao().insert(user);
                 database.statioDao().insertAll(stations);
+            }
+        });
+        // We do this in two action, is because, we need the user and the station IDs, to exist in the database
+        // when adding the fillup, otherwises we will get an SQL Exception.
+        database.runInTransaction(new Runnable() {
+            @Override
+            public void run() {
+                database.fillUpDao().insertAll(fillUps);
             }
         });
     }

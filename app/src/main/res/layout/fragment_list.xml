@@ -1,21 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.FillUpFragment">
-
-    <TextView
-        android:id="@+id/label"
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="isLoading"
+            type="android.databinding.ObservableBoolean"/>
+        <variable
+            name="adapter"
+            type="android.support.v7.widget.RecyclerView.Adapter"/>
+    </data>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Loading Items..."
-        android:gravity="center"/>
+        tools:context=".fragments.FillUpFragment">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
+        <TextView
+            android:id="@+id/label"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Loading Items..."
+            app:enabledGone="@{isLoading}"
+            android:gravity="center"/>
 
-</FrameLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:enabledGone="@{!isLoading}"
+            android:adapter="@{adapter}"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            android:visibility="gone"/>
+    </FrameLayout>
+</layout>

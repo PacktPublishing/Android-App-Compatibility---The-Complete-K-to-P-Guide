@@ -12,7 +12,7 @@ import com.example.jonnd.fuelfinder.entities.User;
 import java.util.List;
 import java.util.concurrent.Executors;
 
-public class UserRepository {
+public class UserRepository implements UserDAO {
 
     private static UserRepository INSTANCE;
 
@@ -47,12 +47,38 @@ public class UserRepository {
         return mUsers;
     }
 
-    public void insertUser(final User user) {
+    @Override
+    public void insert(final User user) {
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
                 mDao.insert(user);
             }
         });
+    }
+
+    @Override
+    public void update(User user) {
+        mDao.update(user);
+    }
+
+    @Override
+    public void delete(User user) {
+        mDao.delete(user);
+    }
+
+    @Override
+    public LiveData<List<User>> loadUsers() {
+        return mUsers;
+    }
+
+    @Override
+    public LiveData<User> loadUserWithId(int id) {
+        return mDao.loadUserWithId(id);
+    }
+
+    @Override
+    public LiveData<User> loadUser(String username, String password) {
+        return mDao.loadUser(username, password);
     }
 }

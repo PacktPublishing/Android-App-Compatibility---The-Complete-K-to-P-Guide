@@ -1,11 +1,12 @@
 package com.example.jonnd.fuelfinder.entities;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
 import java.util.Date;
 
-@Entity
+@Entity(indices = @Index(value = "userName", unique = true))
 public class User {
     @PrimaryKey(autoGenerate = true)
     private long Id;

@@ -42,4 +42,9 @@ public class Station {
     public void setThumbnailFilePath(String thumbnailFilePath) {
         this.thumbnailFilePath = thumbnailFilePath;
     }
+
+    @Override
+    public String toString() {
+        return stationName + " address= " + address;
+    }
 }

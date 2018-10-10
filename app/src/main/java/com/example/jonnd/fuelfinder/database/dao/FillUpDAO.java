@@ -16,13 +16,17 @@ import java.util.List;
 @Dao
 public interface FillUpDAO {
     @Insert(onConflict = OnConflictStrategy.FAIL)
-    public void insert(FillUp fillUp);
+    public long insert(FillUp fillUp);
+    @Insert(onConflict = OnConflictStrategy.FAIL)
+    public void insertAll(List<FillUp> fillUps);
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    public void update(FillUp fillUp);
+    public int update(FillUp fillUp);
     @Delete
     public void delete(FillUp fillUp);
     @Query("SELECT * FROM FillUp")
     public LiveData<List<FillUp>> loadFillUp();
     @Query("SELECT * FROM FillUp WHERE FillUp.Id == :id")
-    public LiveData<FillUp> loadFillWithId(int id);
+    public LiveData<FillUp> loadFillupWithId(long id);
+    @Query("SELECT * FROM FillUp WHERE FillUp.UserId == :id")
+    public LiveData<List<FillUp>> loadFillupsWithUserId(long id);
 }

@@ -1,46 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activities.MainActivity">
+<layout>
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.jonnd.fuelfinder.viewmodel.MainViewModel"/>
+        <variable
+            name="fabClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="pagerAdapter"
+            type="android.support.v4.view.PagerAdapter"/>
+        <variable
+            name="pageChangeListener"
+            type="android.support.v4.view.ViewPager.SimpleOnPageChangeListener"/>
+    </data>
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top">
-        <android.support.v7.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/primaryColor"
-            android:minHeight="?android:attr/actionBarSize"/>
-    </android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.view.ViewPager
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        tools:context=".activities.MainActivity">
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:src="@drawable/ic_add"
-        android:tint="@android:color/white"
-        app:borderWidth="0dp"
-        android:layout_margin="10dp"/>
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_insetEdge="top">
+            <android.support.v7.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/primaryColor"
+                android:minHeight="?android:attr/actionBarSize"/>
+        </android.support.design.widget.AppBarLayout>
 
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="0dp"
-        android:layout_marginStart="0dp"
-        android:background="?android:attr/windowBackground"
-        android:layout_gravity="bottom"
-        app:menu="@menu/navigation"
-        app:layout_insetEdge="bottom"/>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="?android:attr/actionBarSize"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:currentItem="@{viewModel.currentItem}"
+            android:adapter="@{pagerAdapter}"
+            app:onPageChangeListener="@{pageChangeListener}"
+            app:layout_dodgeInsetEdges="bottom|top"/>
 
-</android.support.design.widget.CoordinatorLayout>
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:src="@drawable/ic_add"
+            android:tint="@android:color/white"
+            app:enabledGone="@{viewModel.fabEnabled}"
+            android:onClickListener="@{fabClickListener}"
+            app:borderWidth="0dp"
+            android:layout_margin="10dp"/>
+
+        <android.support.design.widget.BottomNavigationView
+            android:id="@+id/navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="0dp"
+            android:layout_marginStart="0dp"
+            android:background="?android:attr/windowBackground"
+            app:OnNavigationItemSelectedListener="@{viewModel::onNavigationItemSelected}"
+            android:layout_gravity="bottom"
+            app:menu="@menu/navigation"
+            app:layout_insetEdge="bottom"/>
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

@@ -4,6 +4,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 
+import java.util.Date;
+
 @Entity
 public class FillUp {
     @PrimaryKey(autoGenerate = true)
@@ -13,8 +15,9 @@ public class FillUp {
     @ForeignKey(entity = User.class, childColumns = "userId", parentColumns = "Id")
     private long userId;
     private int numberOfGallons;
-    private int pricePerGallon;
+    private double pricePerGallon;
     private String fuelType;
+    private Date date;
 
     public long getId() {
         return Id;
@@ -48,11 +51,11 @@ public class FillUp {
         this.numberOfGallons = numberOfGallons;
     }
 
-    public int getPricePerGallon() {
+    public double getPricePerGallon() {
         return pricePerGallon;
     }
 
-    public void setPricePerGallon(int pricePerGallon) {
+    public void setPricePerGallon(double pricePerGallon) {
         this.pricePerGallon = pricePerGallon;
     }
 
@@ -62,5 +65,13 @@ public class FillUp {
 
     public void setFuelType(String fuelType) {
         this.fuelType = fuelType;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

@@ -1,14 +1,20 @@
 package com.example.jonnd.fuelfinder.database;
 
+import com.example.jonnd.fuelfinder.entities.FillUp;
 import com.example.jonnd.fuelfinder.entities.Station;
 import com.example.jonnd.fuelfinder.entities.User;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
 public class DataGenerator {
+
+    private static final String [] FUEL_TYPE = new String []{
+            "Regular (87)", "Super (89)","Premium (91)"
+    };
 
     private static final String [] FIRST_NAMES = new String[] {
             "Mitch", "Rick", "Paul", "James", "Larry", "Clay",
@@ -62,5 +68,34 @@ public class DataGenerator {
             stations.add(station);
         }
         return stations;
+    }
+
+    public List<FillUp> generateFillUps() {
+        List<FillUp> fillUps = new ArrayList<>(5);
+        Random rnd = new Random();
+        for (int i = 0; i < 5; i++) {
+            FillUp newFillUp = new FillUp();
+            newFillUp.setUserId(1);
+            newFillUp.setStationId(1);
+            newFillUp.setFuelType(FUEL_TYPE[rnd.nextInt(FUEL_TYPE.length)]);
+
+            Calendar cal = Calendar.getInstance();
+            // Force the year to be 2018, but generate pseudorandom values for the
+            // month, day of m, h, m & sec. Use the appropriate bounds for the
+            // relevant unit. etc, the bound for second should be '60'.
+            int year = 2018;
+            int month = rnd.nextInt(12) + 1;
+            int day = month != 2 ? rnd.nextInt(30) : rnd.nextInt(28);
+            int h = rnd.nextInt(24);
+            int m = rnd.nextInt(60);
+            int s = rnd.nextInt(60);
+            cal.set(year, month, day, h, m, s);
+            newFillUp.setDate(cal.getTime());
+            newFillUp.setNumberOfGallons(rnd.nextInt(15));
+            double price = (rnd.nextInt(3) + 1) +  rnd.nextDouble();
+            newFillUp.setPricePerGallon(price);
+            fillUps.add(newFillUp);
+        }
+        return fillUps;
     }
 }

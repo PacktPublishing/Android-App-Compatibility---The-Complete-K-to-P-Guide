@@ -24,5 +24,5 @@ public interface StationDAO {
     @Query("SELECT * FROM Station")
     public LiveData<List<Station>> loadStations();
     @Query("SELECT * FROM Station WHERE Station.Id == :id")
-    public LiveData<Station> loadStationWithId(int id);
+    public LiveData<Station> loadStationWithId(long id);
 }
