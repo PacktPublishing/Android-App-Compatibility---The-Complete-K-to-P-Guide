@@ -11,16 +11,17 @@ import android.arch.persistence.room.Update;
 import com.example.jonnd.fuelfinder.entities.FillUp;
 import com.example.jonnd.fuelfinder.entities.Station;
 
+import java.util.Date;
 import java.util.List;
 
 @Dao
 public interface FillUpDAO {
     @Insert(onConflict = OnConflictStrategy.FAIL)
-    public long insert(FillUp fillUp);
+    public void insert(FillUp fillUp);
     @Insert(onConflict = OnConflictStrategy.FAIL)
     public void insertAll(List<FillUp> fillUps);
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    public int update(FillUp fillUp);
+    public void update(FillUp fillUp);
     @Delete
     public void delete(FillUp fillUp);
     @Query("SELECT * FROM FillUp")
@@ -29,4 +30,6 @@ public interface FillUpDAO {
     public LiveData<FillUp> loadFillupWithId(long id);
     @Query("SELECT * FROM FillUp WHERE FillUp.UserId == :id")
     public LiveData<List<FillUp>> loadFillupsWithUserId(long id);
+    @Query("SELECT * FROM FillUp WHERE date BETWEEN :from AND :to")
+    List<FillUp> loadFillUpsBetweenDate(Date from, Date to);
 }

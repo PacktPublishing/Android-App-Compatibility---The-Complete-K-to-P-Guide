@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onPageSelected(int position) {
             mBinding.navigation.getMenu().getItem(position).setChecked(true);
+            mViewModel.currentItem.set(position);
         }
     };
 }

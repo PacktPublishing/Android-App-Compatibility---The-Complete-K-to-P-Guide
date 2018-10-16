@@ -29,7 +29,9 @@ public class UserRepository implements UserDAO {
         mUsers.addSource(mDao.loadUsers(), new Observer<List<User>>() {
             @Override
             public void onChanged(@Nullable List<User> users) {
-                mUsers.setValue(users);
+                // We use postValue because this could be called off of the main thread, and that will result in
+                // an exception.
+                mUsers.postValue(users);
             }
         });
     }

@@ -10,6 +10,7 @@ import android.arch.persistence.room.Update;
 
 import com.example.jonnd.fuelfinder.entities.User;
 
+import java.util.Date;
 import java.util.List;
 
 @Dao

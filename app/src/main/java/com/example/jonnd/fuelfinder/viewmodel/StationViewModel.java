@@ -16,11 +16,16 @@ import com.example.jonnd.fuelfinder.entities.Station;
 
 public class StationViewModel extends AndroidViewModel {
     LiveData<Station> mLoadedStation;
-    public final ObservableField<Station> station = new ObservableField<>();
+    private long mStationId;
     StationRepository mStationRepo;
+
+    public final ObservableField<String> stationName = new ObservableField<>();
+    public final ObservableField<String> address = new ObservableField<>();
+    public final ObservableField<String> thumbnailFilePath = new ObservableField<>();
+
     public StationViewModel(@NonNull Application application, long stationId) {
         super(application);
-        station.set(new Station());
+        mStationId = stationId;
         mStationRepo = ((FuelFinderApp) application).getStationRepo();
         mLoadedStation = mStationRepo.loadStationWithId(stationId);
     }
@@ -30,11 +35,19 @@ public class StationViewModel extends AndroidViewModel {
     }
 
     public void setObservableStation(Station station) {
-        this.station.set(station);
+        // If fillup is null, that means there wasn't a fillup object that matched fuelId
+        // that means we are more than likely adding a new FillUp.
+        if(station == null) {
+            return;
+        }
+
+        stationName.set(station.getStationName());
+        address.set(station.getAddress());
+        thumbnailFilePath.set(station.getThumbnailFilePath());
     }
 
     public void saveStation(OnFinishedListener listener) {
-        Station station = this.station.get();
+        Station station = getStation();
         if(0 < station.getId()) {
             mStationRepo.update(station,listener);
         }
@@ -43,6 +56,22 @@ public class StationViewModel extends AndroidViewModel {
         }
     }
 
+    /**
+     * Helper method that creates a new FillUp object from this view model's observable fields.
+     * @return  Returns anew FillUp instances that represents this view models fields.
+     */
+    private Station getStation() {
+        Station station = new Station();
+        station.setStationName(stationName.get());
+        station.setAddress(address.get());
+        station.setThumbnailFilePath(thumbnailFilePath.get());
+        return station;
+    }
+
+    /**
+     * Factory class that handles creating an instance of {@link StationViewModel} whose constructor
+     * requires parameters that the ViewModelProvider API cannot provide.
+     */
     public static class Factory extends ViewModelProvider.NewInstanceFactory {
 
         private Application mApp;

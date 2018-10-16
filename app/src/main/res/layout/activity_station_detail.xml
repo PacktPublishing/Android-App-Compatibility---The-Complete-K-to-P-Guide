@@ -59,7 +59,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
                     android:hint="Gas Station"
-                    android:text="@{viewModel.station.stationName}"
+                    android:text="@{viewModel.stationName}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -70,7 +70,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
                     android:hint="Location"
-                    android:text="@{viewModel.station.address}"
+                    android:text="@{viewModel.address}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView12" />
 

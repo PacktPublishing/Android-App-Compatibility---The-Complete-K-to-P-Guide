@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import com.example.jonnd.fuelfinder.database.dao.FillUpDAO;
 import com.example.jonnd.fuelfinder.entities.FillUp;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -31,7 +32,9 @@ public class FillUpRepository implements FillUpDAO {
         mFillUps.addSource(mDao.loadFillUp(), new Observer<List<FillUp>>() {
             @Override
             public void onChanged(@Nullable List<FillUp> fillUps) {
-                mFillUps.setValue(fillUps);
+                // We use postValue because this could be called off of the main thread, and that will result in
+                // an exception.
+                mFillUps.postValue(fillUps);
             }
         });
     }
@@ -46,14 +49,13 @@ public class FillUpRepository implements FillUpDAO {
     }
 
     @Override
-    public long insert(final FillUp fillUp) {
+    public void insert(final FillUp fillUp) {
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
                 mDao.insert(fillUp);
             }
         });
-        return 0;
     }
 
     @Override
@@ -67,8 +69,8 @@ public class FillUpRepository implements FillUpDAO {
     }
 
     @Override
-    public int update(FillUp fillUp) {
-        return mDao.update(fillUp);
+    public void update(FillUp fillUp) {
+        mDao.update(fillUp);
     }
 
     @Override
@@ -96,7 +98,7 @@ public class FillUpRepository implements FillUpDAO {
             @Override
             public void run() {
                 // Update fillUp using the FillUpDao.
-                int val = mDao.update(fillUp);
+                mDao.update(fillUp);
                 // Make sure that the OnFinishedListener isn't null before going through the work
                 // of creating a Handler instance.
                 if (listener != null) {
@@ -120,7 +122,7 @@ public class FillUpRepository implements FillUpDAO {
             @Override
             public void run() {
                 // Insert the fillUp into the FillUpDatabase using the FillUpDao.
-                long val = mDao.insert(fillUp);
+                mDao.insert(fillUp);
                 // Make sure that the OnFinishedListener isn't null before going through the work
                 // of creating a Handler instance.
                 if (listener != null) {
@@ -137,5 +139,10 @@ public class FillUpRepository implements FillUpDAO {
                 }
             }
         });
+    }
+
+    @Override
+    public List<FillUp> loadFillUpsBetweenDate(Date from, Date to) {
+        return mDao.loadFillUpsBetweenDate(from, to);
     }
 }

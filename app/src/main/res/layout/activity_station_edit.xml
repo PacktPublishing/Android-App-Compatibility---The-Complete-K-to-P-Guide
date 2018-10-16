@@ -7,6 +7,9 @@
             name="saveClickListener"
             type="android.view.View.OnClickListener"/>
         <variable
+            name="locationClickListener"
+            type="android.view.View.OnClickListener"/>
+        <variable
             name="viewModel"
             type="com.example.jonnd.fuelfinder.viewmodel.StationViewModel"/>
     </data>
@@ -46,7 +49,7 @@
             android:layout_marginTop="8dp"
             android:ems="10"
             android:hint="Gas Station"
-            android:text="@={viewModel.station.stationName}"
+            android:text="@={viewModel.stationName}"
             android:inputType="textPersonName"
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
@@ -57,7 +60,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Location"
-            android:text="@={viewModel.station.address}"
+            android:text="@={viewModel.address}"
             android:inputType="textPersonName"
             app:layout_constraintStart_toStartOf="@+id/editText"
             app:layout_constraintTop_toBottomOf="@+id/editText" />
@@ -73,5 +76,17 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@android:drawable/ic_menu_save" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:text="Get Location"
+            android:onClickListener="@{locationClickListener}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView" />
     </android.support.constraint.ConstraintLayout>
 </layout>

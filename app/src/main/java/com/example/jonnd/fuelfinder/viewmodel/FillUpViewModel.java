@@ -232,6 +232,10 @@ public class FillUpViewModel extends AndroidViewModel {
         return cal.getTime();
     }
 
+    /**
+     * Factory class that handles creating an instance of {@link FillUpViewModel} whose constructor
+     * requires parameters that the ViewModelProvider API cannot provide.
+     */
     public static class Factory extends ViewModelProvider.NewInstanceFactory {
 
         private Application mApp;
