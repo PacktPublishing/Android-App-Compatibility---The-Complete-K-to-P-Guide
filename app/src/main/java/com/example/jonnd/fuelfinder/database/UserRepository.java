@@ -75,7 +75,7 @@ public class UserRepository implements UserDAO {
     }
 
     @Override
-    public LiveData<User> loadUserWithId(int id) {
+    public LiveData<User> loadUserWithId(long id) {
         return mDao.loadUserWithId(id);
     }
 

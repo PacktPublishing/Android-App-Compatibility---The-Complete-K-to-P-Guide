@@ -2,13 +2,16 @@ package com.example.jonnd.fuelfinder.activities;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.jonnd.fuelfinder.Constants;
 import com.example.jonnd.fuelfinder.FuelFinderApp;
 import com.example.jonnd.fuelfinder.databinding.ActivitySignInBinding;
 import com.example.jonnd.fuelfinder.entities.User;
@@ -30,6 +33,17 @@ public class SignInActivity extends AppCompatActivity {
         binding.setViewModel(mModel);
         // Pass the sign-in click listener to the sing-in binding object to allow the sign-in button to bind to it.
         binding.setClickListener(clickListener);
+
+        long userId = getUserId(this);
+        if(userId != -1) {
+            mModel.getUser(userId).observe(this, new Observer<User>() {
+                @Override
+                public void onChanged(@Nullable User user) {
+                    ((FuelFinderApp) getApplication()).setUser(user);
+                    startActivity(new Intent(SignInActivity.this, MainActivity.class));
+                }
+            });
+        }
     }
 
     /**
@@ -50,6 +64,7 @@ public class SignInActivity extends AppCompatActivity {
                         // We've found the user item in the FillUpDatabase that matches the entered credentials, so store the user
                         // in the FuelFinder application object so the entire app has access to it, then start the MainActivity.
                         ((FuelFinderApp) getApplication()).setUser(user);
+                        persistUser(SignInActivity.this, user);
                         startActivity(new Intent(SignInActivity.this, MainActivity.class));
                         finish();
                     }
@@ -63,4 +78,27 @@ public class SignInActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * Stores a user(id) into the {@link SharedPreferences}.
+     *
+     * @param context
+     * @param user  The user to be stored into the shared preferences.
+     */
+    public static void persistUser(Context context, User user) {
+        SharedPreferences preferences = context.getSharedPreferences(Constants.SHARED_PREFERENCES, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putLong(Constants.USER_ID, user.getId());
+        editor.putString(Constants.USERNAME, user.getUserName());
+        editor.apply();
+    }
+
+    /**
+     * Retrieves the user (Id) from the {@link SharedPreferences}.
+     * @param context
+     * @return The user Id of the user currently stored in the {@link SharedPreferences}, if no user saved, return '-1'.
+     */
+    public static long getUserId(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(Constants.SHARED_PREFERENCES, MODE_PRIVATE);
+        return preferences.getLong(Constants.USER_ID, -1);
+    }
 }

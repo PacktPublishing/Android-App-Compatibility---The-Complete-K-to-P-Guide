@@ -24,6 +24,10 @@ public class SignInViewModel extends AndroidViewModel implements TextViewBinding
         mRepo = ((FuelFinderApp) application).getUserRepo();
     }
 
+    public LiveData<User> getUser(long id) {
+        return mRepo.loadUserWithId(id);
+    }
+
     public LiveData<User> login() {
         return mRepo.loadUser(username.get(), password.get());
     }

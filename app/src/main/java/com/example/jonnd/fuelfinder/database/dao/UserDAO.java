@@ -24,7 +24,7 @@ public interface UserDAO {
     @Query("SELECT * FROM User")
     public LiveData<List<User>> loadUsers();
     @Query("SELECT * FROM User WHERE User.Id == :id")
-    public LiveData<User> loadUserWithId(int id);
+    public LiveData<User> loadUserWithId(long id);
     @Query("SELECT * FROM User WHERE User.userName == :username AND User.password == :password")
     public LiveData<User> loadUser(String username, String password);
 }
