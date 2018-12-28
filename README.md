@@ -33,9 +33,7 @@ Memory: 8 GB RAM
 
 Storage: 150 GB hard disk
 
-Recommended Hardware Requirements For an optimal experience with hands-on labs and other practical activities, we recommend the following confi
-
-guration:
+Recommended Hardware Requirements For an optimal experience with hands-on labs and other practical activities, we recommend the following configuration:
 
 OS: Windows, Mac, Linux
 
